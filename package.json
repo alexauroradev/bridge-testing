@@ -1,0 +1,22 @@
+{
+  "name": "bridge-testing",
+  "version": "1.0.0",
+  "description": "**Disclaimer**: Rainbow Bridge is a WIP project at the moment. Information in this repository might be outdated. Please, consider confirming the deployed contract addresses (and their ABIs) and Rainbow Bridge interfaces (see more [here](https://github.com/near/rainbow-bridge))",
+  "main": "src/erc20-approve.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djsatok/bridge-testing.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/djsatok/bridge-testing/issues"
+  },
+  "homepage": "https://github.com/djsatok/bridge-testing#readme",
+  "dependencies": {
+    "ethers": "^5.0.26"
+  }
+}
