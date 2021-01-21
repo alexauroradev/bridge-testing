@@ -1,0 +1,5 @@
+node-modules
+src/json/ethereum-config.json
+src/json/near-config.json
+testing-bridge.code-workspace
+dist/*
