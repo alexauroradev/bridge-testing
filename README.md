@@ -7,7 +7,7 @@ The steps below are for the Ropsten testnet, same steps might be reproduced for 
 ## Bridge deploymnets
 
 | Bridge Description              | Status      | Ethereum Connector Address                 | NEAR Connector Account |
------------------------------------------------------------------------------------------------------------------------
+|---------------------------------|-------------|--------------------------------------------|------------------------|
 | NEAR testnet - Ropsten testnet  | Deploying   | - | - |
 | NEAR testnet - Rinkeby testnet  | [Syncing](https://explorer.testnet.near.org/accounts/eth2near.bridge05.testnet) | - | - | 
 | NEAR mainnet - Ethereum mainnet | [Stopped](https://github.com/near/rainbow-bridge/issues/455) | - | - |
