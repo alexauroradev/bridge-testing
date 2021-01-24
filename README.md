@@ -20,7 +20,7 @@ The steps below are for the Ropsten testnet, same steps might be reproduced for 
 4. Clone this repo: `git clone git@github.com:djsatok/bridge-testing.git` OR `git clone https://github.com/djsatok/bridge-testing.git`
 6. Create an account in Metamask in Ropsten testnet.
 7. Get some Ropsten ETH. For example using this faucet: https://faucet.ropsten.be/
-8. Get some Ropsten ERC-20 tokens. For example, this can be done using etherscan frontend with this (TST token)[https://github.com/uzyn/ERC20-TST]: https://ropsten.etherscan.io/address/0x722dd3f80bac40c951b51bdd28dd19d435762180#writeContract . Use `showMeTheMoney` method, you will be asked to login with Metamask to send the transaction.
+8. Get some Ropsten ERC-20 tokens. For example, this can be done using etherscan frontend with this [TST token](https://github.com/uzyn/ERC20-TST): https://ropsten.etherscan.io/address/0x722dd3f80bac40c951b51bdd28dd19d435762180#writeContract . Use `showMeTheMoney` method, you will be asked to login with Metamask to send the transaction.
 9. Rename `test-ethereum-config.json`  to `ethereum-config.json` in `bridge-testing/src/json`. Update `ethereum-config.json` with the actual data on the addresses, private key and transfer amount.
 10. Compile JavaScript code from TypeScript: call `tsc` in `bridge-testing` folder. As a result `dist` folder should be populated with `.js` files and a copy of `json` folder.
 
