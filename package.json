@@ -17,6 +17,12 @@
   },
   "homepage": "https://github.com/djsatok/bridge-testing#readme",
   "dependencies": {
-    "ethers": "^5.0.26"
+    "eth-object": "near/eth-object#54e03b8aac8208cf724e206d49ffb8bdd30451d7",
+    "eth-util-lite": "near/eth-util-lite#master",
+    "ethers": "^5.0.26",
+    "merkle-patricia-tree": "^2.3.2",
+    "near-api-js": "^0.36.3",
+    "promisfy": "^1.2.0",
+    "web3": "^1.2.11"
   }
 }
