@@ -65,6 +65,7 @@ async function findProof (lockTxHash) {
 
   return serializeBorsh(proofBorshSchema, formattedProof)
 }
+exports.findProof = findProof;
 
 async function buildTree (block) {
   const blockReceipts = await Promise.all(
@@ -102,12 +103,11 @@ async function extractProof (block, tree, transactionIndex) {
 }
 
 async function main(){
-  let txHash = process.argv[2];
-  
-  console.log('Finding proof for ', txHash);
-  const proof = await findProof(txHash, web3);
+  //let txHash = process.argv[2];
+  //console.log('Finding proof for ', txHash);
+  //const proof = await findProof(txHash, web3);
   //console.log(proof.toString('hex'));
-  console.log(proof);
+  //console.log(proof);
 }
 
 main().then(
