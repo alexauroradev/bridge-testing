@@ -1,0 +1,7 @@
+{
+  "Account": "An address of the account in NEAR TestNet",
+  "JsonRpc": "https://rpc.testnet.near.org/",
+  "ConnectorAccount": "A bridge token factory account, e.g. `f290121.ropsten.testnet` for Ropsten bridge",
+  "Network": "Testnet",
+  "KeyStore": "A full path to the place where your NEAR login credentials are stored. Typically, this is /Users/<user>/.near-credentials/"
+}

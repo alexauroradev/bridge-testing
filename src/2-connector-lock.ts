@@ -1,4 +1,4 @@
-import { ethers, Wallet } from "ethers";
+import { ethers } from "ethers";
 
 import ethereumConfig from './json/ethereum-config.json';
 import connectorAbi from './json/connector.json';
@@ -8,7 +8,6 @@ async function main(){
   const provider = new ethers.providers.JsonRpcProvider(ethereumConfig.JsonRpc);
   const signer = new ethers.Wallet(ethereumConfig.PrivateKey, provider);
   const connector = new ethers.Contract(ethereumConfig.ConnectorAddress, connectorAbi, signer);
-
   const lockTx = await connector.lockToken(ethereumConfig.TokenAddress, ethers.BigNumber.from(ethereumConfig.TransferAmount), nearConfig.Account);
   console.log(lockTx);
 }

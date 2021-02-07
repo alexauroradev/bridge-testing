@@ -8,26 +8,29 @@ The steps below are for the Ropsten testnet, same steps might be reproduced for 
 
 | Bridge Description              | Status      | Ethereum Connector Address                 | NEAR Connector Account |
 |---------------------------------|-------------|--------------------------------------------|------------------------|
-| NEAR testnet - Ropsten testnet  | Deploying   | - | - |
-| NEAR testnet - Rinkeby testnet  | [Syncing](https://explorer.testnet.near.org/accounts/eth2near.bridge05.testnet) | - | - | 
-| NEAR mainnet - Ethereum mainnet | [Stopped](https://github.com/near/rainbow-bridge/issues/455) | - | - |
+| NEAR testnet - Ropsten testnet  | [Working](https://explorer.testnet.near.org/accounts/ropsten.testnet)   | 0xa5289b6d5dcc13e48f2cc6382256e51589849f86 | f290121.ropsten.testnet |
+| NEAR testnet - Rinkeby testnet  | [Working](https://explorer.testnet.near.org/accounts/rinkeby.testnet) | 0x6381a3bad6b51988497dc588496ad1177d1650ea | f030221.rinkeby.testnet | 
+| NEAR mainnet - Ethereum mainnet | Stopped | - | - |
 
 ## Preliminary steps (tested on iOS Big Sur)
 
 1. Make sure you have installed npm
 2. Install TypeScript: `sudo npm install typescript`
-3. Install Ethers.js: `sudo npm install ethers`
-4. Clone this repo: `git clone git@github.com:djsatok/bridge-testing.git` OR `git clone https://github.com/djsatok/bridge-testing.git`
+3. Clone this repo: `git clone git@github.com:djsatok/bridge-testing.git` OR `git clone https://github.com/djsatok/bridge-testing.git`
+4. `cd bridge-testing` & `npm install`.
 6. Create an account in Metamask in Ropsten testnet.
 7. Get some Ropsten ETH. For example using this faucet: https://faucet.ropsten.be/
 8. Get some Ropsten ERC-20 tokens. For example, this can be done using etherscan frontend with this [TST token](https://github.com/uzyn/ERC20-TST): https://ropsten.etherscan.io/address/0x722dd3f80bac40c951b51bdd28dd19d435762180#writeContract . Use `showMeTheMoney` method, you will be asked to login with Metamask to send the transaction.
-9. Rename `test-ethereum-config.json`  to `ethereum-config.json` in `bridge-testing/src/json`. Update `ethereum-config.json` with the actual data on the addresses, private key and transfer amount.
+**TODO:** Scripts at the moment are working only with tokens *deployed* on NEAR side. Tokens can be deployed over the bridge using the [`deploy_bridge_token`](https://github.com/near/rainbow-token-connector/blob/master/bridge-token-factory/src/lib.rs#L238-L266) method. TST token is already deployed, so usable.
+9. Rename `test-ethereum-config.json` to `ethereum-config.json` in `bridge-testing/src/json`. Update `ethereum-config.json` with the actual data on the addresses, private key and transfer amount.
+10. Rename `test-near-config.json` to `near-config.json` in `bridge-testing/src/json`. Update `near-config.json` with the actual data on the addresses and KeyStore
 10. Compile JavaScript code from TypeScript: call `tsc` in `bridge-testing` folder. As a result `dist` folder should be populated with `.js` files and a copy of `json` folder.
 
 
 ## Ethereum to NEAR transfer
-1. **Approve transaction**. Send an `approve` transaction to ERC20 contract. This step implies setting an alowance for a connector contract, so it can withdraw the tokens from your account. Arguments that you should use for this transaction: `ConnectorAddress` and `TransferAmount`. A sample script that implement this transaction send is `src/erc20-approve.ts`. To run it use the following CLI comand: `node dist/erc20-approve.js`.
-2. **[UNTESTED] Locking transaction**. Send a `lock` transaction to `TokenLocker` contract. This step implies locking of a `TransferAmount` tokens in a locking contract, while specifying the NEAR `AccountID`, where bridged tokens should be transferred. Locking method emits an event, which will be used later to proove the fact of locking of funds. See the implementation [here](https://github.com/near/rainbow-token-connector/blob/master/erc20-connector/contracts/ERC20Locker.sol#L32-L35).
-3. **Wait** for 25 confirmations in the Ethereum blockchain. This is needed to achieve finality of Ethereum block, including locking transaction.
-4. **[TODO] Create proof**. Create an event proof with Rainbow Bridge CLI or a script (see example [here](https://github.com/near/rainbow-bridge-frontend/blob/master/src/js/transfers/erc20%2Bnep21/natural-erc20-to-nep21/findProof.js)).
-5. **[TODO] Finalisation of the transfer**. Call minting transaction in NEAR blockchain.
+1. **Approve transaction**. Send an `approve` transaction to ERC20 contract. This step implies setting an alowance for a connector contract, so it can withdraw the tokens from your account. Arguments that you should use for this transaction: `ConnectorAddress` and `TransferAmount`. A sample script that implements sending this transaction is `src/1-erc20-approve.ts`. To run it use the following CLI comand: `node dist/1-erc20-approve.js`.
+2. **Locking transaction**. Send a `lock` transaction to `TokenLocker` contract. This step implies locking of a `TransferAmount` tokens in a locking contract, while specifying the NEAR `AccountID`, where bridged tokens should be transferred. Locking method emits an event, which will be used later to proove the fact of locking of funds. See the implementation [here](https://github.com/near/rainbow-token-connector/blob/master/erc20-connector/contracts/ERC20Locker.sol#L32-L35). A sample script that implements sending this transaction is `src/2-connector-lock.ts`. To run it use the following CLI command: `node dist/2-connector-lock.js`.
+3. **Wait** for 25 confirmations in the Ethereum blockchain. This is needed to achieve finality of Ethereum block, including locking transaction. The status of synching of the bridge can be observed [here](http://35.235.76.186:8002/metrics). First metric (`current client block number`) should become more than the height of a block with transaction from the step 2 at least by 25, for successfull finalisation of the transfer.
+4. **Finalisation of the transfer**. Call minting transaction in NEAR blockchain. This step implies calling a `deposit` method of the NEAR token factory contract. The method consumes [Borsh](https://github.com/near/borsh)-ified proof of the event, emitted during the step 2 transaction execution. The script that implements proof calculation is located at `src/generate-proof.js`, while the finalisation script is located at `src/3-finalise-transfer.ts`. To perform this step, find in the output of the step 2 a hash of the locking transaction, then use the following CLI command `node dist/3-finalise-transfer.js <TransactionHash>`.
+
+## **TODO:** NEAR to Ethereum transfer
