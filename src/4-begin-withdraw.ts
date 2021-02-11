@@ -41,7 +41,7 @@ async function main() {
     bridgeTokenAddress,
     "withdraw",
     {
-      amount: ethereumConfig.TransferAmount,
+      amount: nearConfig.WithdrawAmount,
       recipient: ethereumConfig.Address.replace("0x", ""),
     },
     new BN("3" + "0".repeat(14)) //maximum gas
