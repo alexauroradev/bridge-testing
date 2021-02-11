@@ -9,6 +9,7 @@ async function main() {
   const erc20 = new ethers.Contract(ethereumConfig.TokenAddress, erc20Abi, signer);
 
   const approveTx = await erc20.approve(ethereumConfig.ConnectorAddress, ethers.BigNumber.from(ethereumConfig.TransferAmount));
+  await provider.waitForTransaction(approveTx.hash);
   console.log(approveTx);
 }
 

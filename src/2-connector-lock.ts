@@ -9,6 +9,7 @@ async function main(){
   const signer = new ethers.Wallet(ethereumConfig.PrivateKey, provider);
   const connector = new ethers.Contract(ethereumConfig.ConnectorAddress, connectorAbi, signer);
   const lockTx = await connector.lockToken(ethereumConfig.TokenAddress, ethers.BigNumber.from(ethereumConfig.TransferAmount), nearConfig.Account);
+  await provider.waitForTransaction(lockTx.hash);
   console.log(lockTx);
 }
 
