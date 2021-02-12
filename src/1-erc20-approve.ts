@@ -15,7 +15,7 @@ async function main() {
   
   // Get already approved amount
   const initialApprovedAmount = new BN((await erc20.allowance(ethereumConfig.Address, ethereumConfig.ConnectorAddress)).toString());
-  console.log("Initial approved amount of tokens: ", initialApprovedAmount.toString());
+  console.log("Initial approved amount of tokens:", initialApprovedAmount.toString());
   if (initialApprovedAmount >= depositAmount) {
     console.log("There's already sufficient amount of approved tokens, no need to schedule a transaction");
     return;
@@ -23,11 +23,14 @@ async function main() {
 
   // Schedule 'approve' transaction
   const approveTx = await erc20.approve(ethereumConfig.ConnectorAddress, ethers.BigNumber.from(ethereumConfig.DepositAmount));
-  await provider.waitForTransaction(approveTx.hash);
-  console.log("Approving transaction completed: ", approveTx.hash);
+  if (!(await provider.waitForTransaction(approveTx.hash)).status){
+    console.log("Because of some reason transaction was not applied as expected");
+    return;
+  }
+  console.log("Approving transaction completed:", approveTx.hash);
   
   const finalApprovedAmount = new BN((await erc20.allowance(ethereumConfig.Address, ethereumConfig.ConnectorAddress)).toString());
-  console.log("Resulting approved amount of tokens: ", finalApprovedAmount.toString());
+  console.log("Resulting approved amount of tokens:", finalApprovedAmount.toString());
 }
 
 main().then(
