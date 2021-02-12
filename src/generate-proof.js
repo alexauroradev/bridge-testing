@@ -106,20 +106,3 @@ async function extractProof (block, tree, transactionIndex) {
     txIndex: transactionIndex
   };
 }
-
-async function main(){
-  //let txHash = process.argv[2];
-  //console.log('Finding proof for ', txHash);
-  //const proof = await findProof(txHash, web3);
-  //console.log(proof.toString('hex'));
-  //console.log(proof);
-}
-
-main().then(
-  text => {
-      console.log(text);
-  },
-  err => {
-      console.log(err);
-  }
-);

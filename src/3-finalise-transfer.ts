@@ -1,24 +1,31 @@
 import ethereumConfig from './json/ethereum-config.json';
 import nearConfig from './json/near-config.json';
-const nearAPI = require("near-api-js");
 import BN from 'bn.js';
-
-const keyStore = new nearAPI.keyStores.UnencryptedFileSystemKeyStore(nearConfig.KeyStore);
-
 const Web3 = require('web3');
 const web3 = new Web3(ethereumConfig.JsonRpc);
+
+// NEAR keystore init
+const nearAPI = require("near-api-js");
+const keyStore = new nearAPI.keyStores.UnencryptedFileSystemKeyStore(nearConfig.KeyStore);
+
+// A script that generates proofs of Ethereum events from locking transactions
 const Proof = require('./../src/generate-proof');
 
-function getBridgedTokenAddress (erc20Address: string): string {
-  return erc20Address.replace('0x', '').toLowerCase() +
-      '.' + nearConfig.ConnectorAccount;
-}
-
 async function main(){
+  if (process.argv.length != 3) {
+    console.log("Incorrect usage of the script. Please call:");
+    console.log("$ node", process.argv[1], "<locking transaction hash>");
+    return;
+  }
   let txHash: string = process.argv[2];
-  const proof = await Proof.findProof(txHash, web3);
-  console.log('Found proof for ', txHash);
+  console.log("Finalising deposit, that was started in Ethereum transaction", txHash);
+  console.log("--------------------------------------------------------------------------------")
   
+  // TODO: check that this script works as expected
+  const proof = await Proof.findProof(txHash, web3);
+  console.log("The proof was successfully found");
+  
+  // Init NEAR API
   const near = await nearAPI.connect({
     deps: {
       keyStore,
@@ -28,39 +35,42 @@ async function main(){
   });
 
   const account = await near.account(nearConfig.Account);
-  const val1 = new BN('300000000000000');
-  const val2 = new BN('100000000000000000000').mul(new BN('600'));
 
   const connector = new nearAPI.Contract(
     account,
     nearConfig.ConnectorAccount,
     {
-      viewMethods: [],
+      viewMethods: ["get_bridge_token_account_id"],
       changeMethods: ["deposit"]
     }
   );
+  
+  // Querry bridged token address
+  const bridgedTokenAddress = (await connector.get_bridge_token_account_id({"address": ethereumConfig.TokenAddress.replace("0x", "")})).toString();
+  console.log("Bridged token address is", bridgedTokenAddress);
 
   const bridgedToken = new nearAPI.Contract(
     account,
-    getBridgedTokenAddress(ethereumConfig.TokenAddress),
+    bridgedTokenAddress,
     {
       viewMethods: ["get_balance"],
       changeMethods: []
     }
   )
-  console.log("Bridged token address: ", getBridgedTokenAddress(ethereumConfig.TokenAddress));
 
   const initialBalance = await bridgedToken.get_balance({ "owner_id": nearConfig.Account });
-  console.log("Balance before the transfer: ", initialBalance);
+  console.log("Bridged token balance of", nearConfig.Account, "before finalisation of the deposit:", initialBalance);
+  
+  const val1 = new BN('300000000000000'); // Gas limit
+  const val2 = new BN('100000000000000000000').mul(new BN('600')); // Attached payment to pay for the storage
   await connector.deposit(proof, val1, val2);
+  
   const finalBalance = await bridgedToken.get_balance({ "owner_id": nearConfig.Account });
-  console.log("Balance after the transfer: ", finalBalance);
-
+  console.log("Bridged token balance of", nearConfig.Account, "after finalisation of the deposit: ", finalBalance);
 }
 
 main().then(
   text => {
-      console.log(text);
   },
   err => {
       console.log(err);
