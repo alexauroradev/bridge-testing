@@ -3,6 +3,7 @@
   "PrivateKey": "A private key of the account (copied from MetaMask under Account Details with '0x' prefix)",
   "JsonRpc": "A link to JSON RPC that you use (alchemyapi.io, infura.io or your full Ethereum node of a respective network)",
   "TokenAddress": "An address of ERC-20 token, for example 0x722dd3F80BAC40c951b51BdD28Dd19d435762180",
-  "TransferAmount": "Amount that you want to transfer. Mind the zeros: most ERC-20 tokens has 18 decimals.",
-  "ConnectorAddress": "A connector address, for example 0xa5289b6d5dcc13e48f2cc6382256e51589849f86 in Ropsten"
+  "DepositAmount": "Amount that you want to transfer. Mind the zeros: most ERC-20 tokens has 18 decimals.",
+  "ConnectorAddress": "A connector address, for example 0xa5289b6d5dcc13e48f2cc6382256e51589849f86 in Ropsten",
+  "ClientAddress": "An address of the NEAR client on Ethereum, for example 0x05af81eeb82ab7a294a9942ba01ae2d2da9f18be in Ropsten"
 }
