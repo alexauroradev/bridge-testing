@@ -61,7 +61,7 @@ async function main() {
   const successReceiptId = withdrawTx.receipts_outcome.find(
     (r) => r.id === txReceiptId
   ).outcome.status.SuccessReceiptId;
-  console.log("The receipt of transaction execution outcome:", successReceiptId);
+  console.log("The receipt of the transaction:", successReceiptId);
   console.log("This receipt should be used in the withdraw finalisation step");
   const txReceiptBlockHash = withdrawTx.receipts_outcome.find(
     (r) => r.id === successReceiptId

@@ -17,7 +17,7 @@ const keyStore = new nearAPI.keyStores.UnencryptedFileSystemKeyStore(
 async function main() {
   if (process.argv.length != 3) {
     console.log("Incorrect usage of the script. Please call:");
-    console.log("$ node", process.argv[1], "<execution outcome>");
+    console.log("$ node", process.argv[1], "<receipt>");
     return;
   }
   let receiptId: string = process.argv[2];
