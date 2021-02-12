@@ -40,3 +40,15 @@ The steps below are for the Ropsten testnet, same steps might be reproduced for 
 1. **Begin withdraw**. Send a `withdraw` transaction to the bridged token contract. During the execution, a token factory contract will be called and issue an execution outcome, which would be used during finalisation step to contruct the proof for the locking contract in Ethereum. This step is implemented in `src/4-begin-withdraw.ts`. After the compilation to perform this step call: `$ node build/4-begin-withdraw.js`.
 2. **Wait sufficiently long**. This approximately takes 10 minutes for the Ropsten bridge deployment. This is needed to relay NEAR block with the height higher than the block with transaction from previous step to Ethereum, plus wait a challenge period. The status of syncing of the bridge can be observed [here](http://35.235.76.186:8001/metrics). First metric `near_bridge_near2eth_client_height` should become higher than the block height displayed in console during the previous step.
 3. **Finalise withdraw**. Send an `unlock` transaction to the locking contract. After bridge syncing we are able to prove the fact of withdrawal transaction on NEAR to the locking contract. Script `src/5-finalise-withdraw.ts` implements calculation of the correspondent proof (with the help of `src/borshify-proof.js`) and sends this proof in the locking contract. To perform this step, find in the output of the step 1 a receipt of the execution outcome, then use the following CLI command `$ node build/4-finalise-withdraw.js <Receipt>`.
+
+## Example of transfers
+### Ethereum -> NEAR transfer
+
+* [ERC20 Approve](https://ropsten.etherscan.io/tx/0x512371d971f01e685f33b5467ca90ecdf46006ea67678ab038424386df73cd2e) (43,991 ETH Gas)
+* [Lock](https://ropsten.etherscan.io/tx/0x41c00b577fa26423085015f96f82210c2cf41072893f94c27b4bffa95f0fe630) (35,553 ETH Gas)
+* [Finish deposit](https://explorer.testnet.near.org/transactions/3mruBRRobVE3PpEQtYwKFr57b4ofznjfhpM7yHMw31VY) (64 TGas)
+
+### NEAR -> Ethereum transfer
+
+* [Withdraw](https://explorer.testnet.near.org/transactions/92f7YviCxGy7qH4nPeyQAyYpTs3656d2sh3fyFJ6g2Bj) (13 TGas)
+* [Finish withdraw](https://ropsten.etherscan.io/tx/0xdf672bb71d79d55ad3b7cd24c4d4b4ed46c110421a571b999b1b8e4d8643bf36) (281,166 ETH Gas )
