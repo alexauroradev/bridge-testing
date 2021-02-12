@@ -75,11 +75,7 @@ async function main() {
     owner_id: nearConfig.Account,
   });
   console.log("Bridged token balance of", nearConfig.Account, "after the withdraw: ", finalBalance);
-  console.log(
-    "Now you need to wait until NEAR Client on Ethereum will get a block with a height higher than",
-    receiptBlock.header.height,
-    "plus challenge period"
-  );
+  console.log("Now you need to wait until NEAR Client on Ethereum will get a block with a height higher than", receiptBlock.header.height);
 }
 
 main().then(
