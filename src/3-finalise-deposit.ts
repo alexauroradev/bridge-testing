@@ -11,6 +11,8 @@ const keyStore = new nearAPI.keyStores.UnencryptedFileSystemKeyStore(nearConfig.
 // A script that generates proofs of Ethereum events from locking transactions
 const Proof = require('./../src/generate-proof');
 
+const DeployToken = require('./deploy-token');
+
 async function main(){
   if (process.argv.length != 3) {
     console.log("Incorrect usage of the script. Please call:");
@@ -46,8 +48,17 @@ async function main(){
   );
   
   // Querry bridged token address
-  const bridgedTokenAddress = (await connector.get_bridge_token_account_id({"address": ethereumConfig.TokenAddress.replace("0x", "")})).toString();
-  console.log("Bridged token address is", bridgedTokenAddress);
+  let bridgedTokenAddress: string = '';
+  try {
+    bridgedTokenAddress = (await connector.get_bridge_token_account_id({"address": ethereumConfig.TokenAddress.replace("0x", "")})).toString();
+    console.log("Bridged token address is", bridgedTokenAddress);
+  } catch (e) {
+    console.log("The token was not deployed previously");
+    bridgedTokenAddress = await DeployToken.deployToken(ethereumConfig.TokenAddress);
+  }
+  if (bridgedTokenAddress.length == 0) {
+    throw('The problem with deploying token occured')
+  }
 
   const bridgedToken = new nearAPI.Contract(
     account,
