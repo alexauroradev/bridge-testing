@@ -40,7 +40,7 @@ async function main() {
   const initialBalanceRecipient = await bridgedToken.get_balance({
     owner_id: config.Recipient,
   });
-  console.log("Bridged token balance of", config.Account, "(recipient) before the transfer:", initialBalanceRecipient);
+  console.log("Bridged token balance of", config.Recipient, "(recipient) before the transfer:", initialBalanceRecipient);
 
 
   const transferTx = await account.functionCall(
@@ -68,8 +68,8 @@ async function main() {
   const finalBalanceRecipient = await bridgedToken.get_balance({
     owner_id: config.Recipient,
   });
-  console.log("Bridged token balance of", config.Account, "(recipient) before the transfer:", finalBalanceRecipient);
-  
+  console.log("Bridged token balance of", config.Recipient, "(recipient) before the transfer:", finalBalanceRecipient);
+
 }
 
 main().then(
