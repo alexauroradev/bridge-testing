@@ -1,0 +1,12 @@
+{
+  "Account": "An account in NEAR TestNet",
+  "JsonRpc": "https://rpc.testnet.near.org/",
+  "ConnectorAccount": "A bridge token factory account, e.g. `f290121.ropsten.testnet` for Ropsten bridge",
+  "Network": "Testnet",
+  "KeyStore": "A full path to the place where your NEAR login credentials are stored. Typically, this is /Users/<user>/.near-credentials/",
+  "TokenAccount": "ERC-20 address, for example 0x722dd3f80bac40c951b51bdd28dd19d435762180 for Ropsten TST token",
+  "Recipient": "A recipient account in NEAR TestNet",
+  "TransferAmount": "Amount of tokens to be transferred, for example 1000000000000000000 to transfer 1 token with 18 decimals"
+}
+
+

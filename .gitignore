@@ -3,6 +3,7 @@ node_modules
 *.map
 src/json/ethereum-config.json
 src/json/near-config.json
+src/NEP21\ transfers/config.json
 testing-bridge.code-workspace
 build/*
 .vscode/launch.json
