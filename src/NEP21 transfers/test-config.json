@@ -8,5 +8,3 @@
   "Recipient": "A recipient account in NEAR TestNet",
   "TransferAmount": "Amount of tokens to be transferred, for example 1000000000000000000 to transfer 1 token with 18 decimals"
 }
-
-

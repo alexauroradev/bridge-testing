@@ -16,7 +16,7 @@ async function deployToken(address: string): Promise<string> {
     viewMethods: ["get_bridge_token_account_id"],
     changeMethods: ["deploy_bridge_token"],
   });
-  const attachedDeposit = new BN('30500000000000000000000000'); // 30.5 $NEAR
+  const attachedDeposit = new BN('3500000000000000000000000'); // 3.5 $NEAR
   const attachedGas = new BN('60000000000000'); //60 TGas
   console.log("Trying to deploy a token on NEAR:", address);
   await connector.deploy_bridge_token({"address": address.replace("0x", "")}, attachedGas, attachedDeposit);

@@ -29,12 +29,12 @@ async function main() {
 
   const bridgedToken = new nearAPI.Contract(account, bridgedTokenAddress,
     {
-      viewMethods: ["get_balance"],
+      viewMethods: ["ft_balance_of"],
       changeMethods: ["withdraw"],
     }
   );
-  const initialBalance = await bridgedToken.get_balance({
-    owner_id: nearConfig.Account,
+  const initialBalance = await bridgedToken.ft_balance_of({
+    account_id: nearConfig.Account,
   });
   console.log("Bridged token balance of", nearConfig.Account, "before the withdraw:", initialBalance);
 
@@ -45,7 +45,8 @@ async function main() {
       amount: nearConfig.WithdrawAmount,
       recipient: ethereumConfig.Address.replace("0x", ""),
     },
-    new BN("3" + "0".repeat(14)) // Maximum gas limit
+    new BN("3" + "0".repeat(14)), // Maximum gas limit
+    new BN("1")
   );
   
   if (withdrawTx.status.Failure) {
@@ -55,7 +56,7 @@ async function main() {
     console.log("Withdraw transaction succeeded:", withdrawTx.transaction.hash);
   }
 
-  // Finding the execution outcome that would be used to proove withdraw on the Ethereum side
+  // Finding the execution outcome that would be used to prove withdraw on the Ethereum side
   const receiptIds = withdrawTx.transaction_outcome.outcome.receipt_ids;
   const txReceiptId = receiptIds[0];
   const successReceiptId = withdrawTx.receipts_outcome.find(
@@ -71,8 +72,8 @@ async function main() {
     blockId: txReceiptBlockHash,
   });
 
-  const finalBalance = await bridgedToken.get_balance({
-    owner_id: nearConfig.Account,
+  const finalBalance = await bridgedToken.ft_balance_of({
+    account_id: nearConfig.Account,
   });
   console.log("Bridged token balance of", nearConfig.Account, "after the withdraw: ", finalBalance);
   console.log("Now you need to wait until NEAR Client on Ethereum will get a block with a height higher than", receiptBlock.header.height);
