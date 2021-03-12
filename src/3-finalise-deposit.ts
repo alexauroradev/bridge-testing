@@ -64,19 +64,19 @@ async function main(){
     account,
     bridgedTokenAddress,
     {
-      viewMethods: ["get_balance"],
+      viewMethods: ["ft_balance_of"],
       changeMethods: []
     }
   )
 
-  const initialBalance = await bridgedToken.get_balance({ "owner_id": nearConfig.Account });
+  const initialBalance = await bridgedToken.ft_balance_of({ "account_id": nearConfig.Account });
   console.log("Bridged token balance of", nearConfig.Account, "before finalisation of the deposit:", initialBalance);
   
   const val1 = new BN('300000000000000'); // Gas limit
   const val2 = new BN('100000000000000000000').mul(new BN('600')); // Attached payment to pay for the storage
   await connector.deposit(proof, val1, val2);
   
-  const finalBalance = await bridgedToken.get_balance({ "owner_id": nearConfig.Account });
+  const finalBalance = await bridgedToken.ft_balance_of({ "account_id": nearConfig.Account });
   console.log("Bridged token balance of", nearConfig.Account, "after finalisation of the deposit: ", finalBalance);
 }
 
