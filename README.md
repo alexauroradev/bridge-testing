@@ -6,24 +6,26 @@ The steps below are for the Ropsten testnet, same steps might be reproduced for 
 
 ## Bridge deploymnets
 
-| Bridge Description              | Status      | Ethereum Connector Address                 | NEAR Connector Account |
-|---------------------------------|-------------|--------------------------------------------|------------------------|
-| NEAR testnet - Ropsten testnet  | [Working](https://explorer.testnet.near.org/accounts/ropsten.testnet)   | 0xa5289b6d5dcc13e48f2cc6382256e51589849f86 | f290121.ropsten.testnet |
-| NEAR testnet - Rinkeby testnet  | [Working](https://explorer.testnet.near.org/accounts/rinkeby.testnet) | 0x6381a3bad6b51988497dc588496ad1177d1650ea | f030221.rinkeby.testnet | 
-| NEAR mainnet - Ethereum mainnet | Stopped | - | - |
+### Mainnet
 
-## Preliminary steps (tested on iOS Big Sur, Testnet - Ropsten bridge deployment)
+#### Ethereum
+1. Client address: [0xce9d8c70c2ac161383c4debf207d884f6531b1b9](https://etherscan.io/address/0xce9d8c70c2ac161383c4debf207d884f6531b1b9)
+2. ERC20 connector address: [0x23ddd3e3692d1861ed57ede224608875809e127f](https://etherscan.io/address/0x23ddd3e3692d1861ed57ede224608875809e127f)
+
+#### NEAR
+1. Client account: [client.bridge.near](https://explorer.near.org/accounts/client.bridge.near)
+2. ERC20 connector account: [factory.bridge.near](https://explorer.near.org/accounts/factory.bridge.near)
+
+## Preliminary steps (tested on iOS Big Sur, Ethereum - NEAR mainnet bridge deployment)
 
 1. Make sure you have installed npm
 2. Install NEAR CLI: `$ npm install -g near-cli`
 3. Install TypeScript: `$ npm install -g typescript`
 4. Clone this repo: `$ git clone git@github.com:djsatok/bridge-testing.git` OR `$ git clone https://github.com/djsatok/bridge-testing.git`
 5. `$ cd bridge-testing` & `$ npm install`.
-6. Create an account in Metamask in Ropsten testnet.
-7. Get some Ropsten ETH. For example using this faucet: https://faucet.ropsten.be/
-8. Get some Ropsten ERC-20 tokens. For example, this can be done using etherscan frontend with this [TST token](https://github.com/uzyn/ERC20-TST): https://ropsten.etherscan.io/address/0x722dd3f80bac40c951b51bdd28dd19d435762180#writeContract . Use `showMeTheMoney` method, you will be asked to login with Metamask to send the transaction. Alternatively you can deploy your own token, for example from [this free Ropsten ERC20 generator](https://vittominacori.github.io/erc20-generator/)
-9. Create an account in NEAR TestNet: https://wallet.testnet.near.org/
-10. Make sure that you're working with the NEAR TestNet: `$ export NODE_ENV=testnet`
+6. Make sure you have an access to your Ethereum account (you have a private key) and you know the address of the ERC20 token that you would like to transfer.
+9. Make sure you have an access to your NEAR account through NEAR Wallet: https://wallet.near.org/
+10. Make sure that you're working with the NEAR Mainnet: `$ export NODE_ENV=mainnet`
 11. Log in to the NEAR Wallet from the CLI: `$ near login`. The browser should pop up and a NEAR Wallet should ask for a permission for adding a full access key.
 12. Rename `test-ethereum-config.json` to `ethereum-config.json` in `bridge-testing/src/json`. Update `ethereum-config.json` with the actual data on the addresses, private key and transfer amount. RPC access can be easily gained from [Alchemy](https://www.alchemyapi.io/).
 13. Rename `test-near-config.json` to `near-config.json` in `bridge-testing/src/json`. Update `near-config.json` with the actual data on the addresses and KeyStore
@@ -31,24 +33,24 @@ The steps below are for the Ropsten testnet, same steps might be reproduced for 
 
 
 ## Ethereum to NEAR transfer
-1. **Approve transaction**. Send an `approve` transaction to ERC20 contract. This step implies setting an alowance for a connector contract, so it can withdraw the tokens from your account. Arguments that you should use for this transaction: `ConnectorAddress` and `DepositAmount`. A sample script that implements sending this transaction is `src/1-erc20-approve.ts`. To run it use the following comand: `$ node build/1-erc20-approve.js`.
+1. **Approve transaction**. Send an `approve` transaction to ERC20 contract. This step implies setting an alowance for a connector contract, so it can withdraw the tokens from your account. Arguments that you should use for this transaction: `ConnectorAddress` and `DepositAmount`. A sample script that implements sending this transaction is `src/1-erc20-approve.ts`. To run it use the following comand: `$ node build/1-erc20-approve.js`. **Note**: In case you're doing multiple transfers of the same ERC20 token, you can combine approvals into a single approve transaction with the sum of the amounts. This will reduce the gas costs for this step.
 2. **Locking transaction**. Send a `lock` transaction to `TokenLocker` contract. This step implies locking of a `DepositAmount` tokens in a locking contract, while specifying the NEAR `AccountID`, where bridged tokens should be transferred. Locking method emits an event, which will be used later to prove the fact of locking of funds. See the implementation [here](https://github.com/near/rainbow-token-connector/blob/master/erc20-connector/contracts/ERC20Locker.sol#L32-L35). A sample script that implements sending this transaction is `src/2-connector-lock.ts`. To run it use the following CLI command: `$ node build/2-connector-lock.js`.
-3. **Wait sufficiently long**. 30 confirmations for Ropsten blockchain. This is needed to achieve finality of Ropsten block, including locking transaction. The status of syncing of the bridge can be observed [here](http://35.235.76.186:8002/metrics). First metric (`near_bridge_eth2near_client_block_number`) should become more than the height of a block with transaction from the step 2 at least by 30, for successfull finalisation of the transfer.
-4. **Finalisation of the transfer**. Call minting transaction in NEAR blockchain. This step implies calling a `deposit` method of the NEAR token factory contract. The method consumes [Borsh](https://github.com/near/borsh)-ified proof of the event, emitted during the step 2 transaction execution. The script that implements proof calculation is located at `src/generate-proof.js`, while the finalisation script is located at `src/3-finalise-deposit.ts`. To perform this step, find in the output of the step 2 a hash of the locking transaction, then use the following CLI command `$ node build/3-finalise-deposit.js <TransactionHash>`. **Note**: In case the token was not previously deployed to NEAR blockchain (was never bridged before), an additional call to `deploy_bridge_token` will be done automatically. This call deploys the bridged token contract and requires a deposit of 30.5 $NEAR.
+3. **Wait sufficiently long**. 20 confirmations for Ethereum<>NEAR mainnet deployment. This is needed to achieve finality of Ethereum block, which includes the locking transaction. The status of syncing of the bridge can be observed [here](http://34.94.229.96:8002/metrics). First metric (`near_bridge_eth2near_client_block_number`) should become more than the height of a block with transaction from the step 2 at least by 20, for successfull finalisation of the transfer.
+4. **Finalisation of the transfer**. Call minting transaction in NEAR blockchain. This step implies calling a `deposit` method of the NEAR token factory contract. The method consumes [Borsh](https://github.com/near/borsh)-ified proof of the event, emitted during the step 2 transaction execution. The script that implements proof calculation is located at `src/generate-proof.js`, while the finalisation script is located at `src/3-finalise-deposit.ts`. To perform this step, find in the output of the step 2 a hash of the locking transaction, then use the following CLI command `$ node build/3-finalise-deposit.js <TransactionHash>`. **Note**: In case the token was not previously deployed to NEAR blockchain (was never bridged before), an additional call to `deploy_bridge_token` will be done automatically. This call deploys the bridged token contract and requires a deposit of 3.5 $NEAR.
 
 ## NEAR to Ethereum transfer
-1. **Begin withdraw**. Send a `withdraw` transaction to the bridged token contract. During the execution, a token factory contract will be called and issue an execution outcome, which would be used during finalisation step to contruct the proof for the locking contract in Ethereum. This step is implemented in `src/4-begin-withdraw.ts`. After the compilation to perform this step call: `$ node build/4-begin-withdraw.js`.
-2. **Wait sufficiently long**. This approximately takes 10 minutes for the Ropsten bridge deployment. This is needed to relay NEAR block with the height higher than the block with transaction from previous step to Ethereum, plus wait a challenge period. The status of syncing of the bridge can be observed [here](http://35.235.76.186:8001/metrics). First metric `near_bridge_near2eth_client_height` should become higher than the block height displayed in console during the previous step.
-3. **Finalise withdraw**. Send an `unlock` transaction to the locking contract. After bridge syncing we are able to prove the fact of withdrawal transaction on NEAR to the locking contract. Script `src/5-finalise-withdraw.ts` implements calculation of the correspondent proof (with the help of `src/borshify-proof.js`) and sends this proof in the locking contract. To perform this step, find in the output of the step 1 a receipt of the execution outcome, then use the following CLI command `$ node build/4-finalise-withdraw.js <Receipt>`.
+1. **Begin withdraw**. Send a `withdraw` transaction to the bridged token contract. During the execution, a token factory contract will be called and issue a receipt, which would be used during finalisation step to contruct the proof for the locking contract in Ethereum. This step is implemented in `src/4-begin-withdraw.ts`. To perform this step call: `$ node build/4-begin-withdraw.js`.
+2. **Wait sufficiently long**. This takes around 12 hours for the Ethereum<>NEAR mainnet deployment. This is needed to relay NEAR block with the height higher than the block with transaction from previous step to Ethereum, plus wait a challenge period (4 hours). The status of syncing of the bridge can be observed [here](http://34.94.229.96:8001/metrics). First metric `near_bridge_near2eth_client_height` should become higher than the block height displayed in console during the previous step.
+3. **Finalise withdraw**. Send an `unlock` transaction to the locking contract. After bridge syncing we are able to prove the fact of the withdrawal on NEAR. Script `src/5-finalise-withdraw.ts` implements calculation of the correspondent proof (with the help of `src/borshify-proof.js`) and sends this proof in the locking contract. To perform this step, find in the output of the step 1 a receipt of the transaction, then use the following CLI command `$ node build/4-finalise-withdraw.js <Receipt>`.
 
 ## Example of transfers
 ### Ethereum -> NEAR transfer
 
-* [ERC20 Approve](https://ropsten.etherscan.io/tx/0x512371d971f01e685f33b5467ca90ecdf46006ea67678ab038424386df73cd2e) (43,991 ETH Gas)
-* [Lock](https://ropsten.etherscan.io/tx/0x41c00b577fa26423085015f96f82210c2cf41072893f94c27b4bffa95f0fe630) (35,553 ETH Gas)
-* [Finish deposit](https://explorer.testnet.near.org/transactions/3mruBRRobVE3PpEQtYwKFr57b4ofznjfhpM7yHMw31VY) (64 TGas)
+* [ERC20 Approve](https://etherscan.io/tx/0x98b0c7b977eb701769dfb22c18539bc4a87539ef67499fa49ad543bdfc3b8ef2) (44,046 ETH Gas)
+* [Lock](https://etherscan.io/tx/0x250607fdc1afab0ad183cf008e296839e8d4e3a5f14f2a290f27470f030ea80c) (56,088 ETH Gas)
+* [Finish deposit](https://explorer.near.org/transactions/4MCiuNHSnkrHceFyw86PxgwGTANhJDEcCmBxuEzz6tjT) (63 NEAR TGas)
 
 ### NEAR -> Ethereum transfer
 
-* [Withdraw](https://explorer.testnet.near.org/transactions/92f7YviCxGy7qH4nPeyQAyYpTs3656d2sh3fyFJ6g2Bj) (13 TGas)
-* [Finish withdraw](https://ropsten.etherscan.io/tx/0xdf672bb71d79d55ad3b7cd24c4d4b4ed46c110421a571b999b1b8e4d8643bf36) (281,166 ETH Gas )
+* [Withdraw](https://explorer.near.org/transactions/GkcKPbX8sRxUQBJNp71rhG7Ev93cqvDRiCvtPaEsG8pH) (13 TGas)
+* [Finish withdraw](https://etherscan.io/tx/0x54d9a80a871663c0e94203fe423e61f0a3ee12f36ce1424cb87b5caad0656141) (286,232 ETH Gas)

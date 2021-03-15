@@ -1,8 +1,8 @@
 {
-  "Account": "An address of the account in NEAR TestNet",
-  "JsonRpc": "https://rpc.testnet.near.org/",
-  "ConnectorAccount": "A bridge token factory account, e.g. `f290121.ropsten.testnet` for Ropsten bridge",
-  "Network": "Testnet",
+  "Account": "An address of the account in NEAR",
+  "JsonRpc": "https://rpc.mainnet.near.org/",
+  "ConnectorAccount": "A bridge token factory account, e.g. `factory.bridge.near`",
+  "Network": "mainnet",
   "KeyStore": "A full path to the place where your NEAR login credentials are stored. Typically, this is /Users/<user>/.near-credentials/",
   "WithdrawAmount": "An amount to withdraw"
 }
