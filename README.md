@@ -2,7 +2,7 @@
 
 **Disclaimer**: Rainbow Bridge is a WIP project at the moment. Information in this repository might be outdated. Please, consider confirming the deployed contract addresses (and their ABIs) and Rainbow Bridge interfaces (see more [here](https://github.com/near/rainbow-bridge))
 
-The steps below are for the Ropsten testnet, same steps might be reproduced for other testnets and mainnet.
+The steps below are for the mainnet, same steps might be reproduced for testnets.
 
 ## Bridge deploymnets
 
