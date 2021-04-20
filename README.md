@@ -9,12 +9,14 @@ The steps below are for the mainnet, same steps might be reproduced for testnets
 ### Mainnet
 
 #### Ethereum
-1. Client address: [0xce9d8c70c2ac161383c4debf207d884f6531b1b9](https://etherscan.io/address/0xce9d8c70c2ac161383c4debf207d884f6531b1b9)
-2. ERC20 connector address: [0x23ddd3e3692d1861ed57ede224608875809e127f](https://etherscan.io/address/0x23ddd3e3692d1861ed57ede224608875809e127f)
+1. Client address: [0x0151568af92125fb289f1dd81d9d8f7484efc362](https://etherscan.io/address/0x0151568af92125fb289f1dd81d9d8f7484efc362)
+2. Prover address: [0x051ad3f020274910065dcb421629cd2e6e5b46c4](https://etherscan.io/address/0x051ad3f020274910065dcb421629cd2e6e5b46c4)
+3. ERC20 connector address: [0x23ddd3e3692d1861ed57ede224608875809e127f](https://etherscan.io/address/0x23ddd3e3692d1861ed57ede224608875809e127f)
 
 #### NEAR
 1. Client account: [client.bridge.near](https://explorer.near.org/accounts/client.bridge.near)
-2. ERC20 connector account: [factory.bridge.near](https://explorer.near.org/accounts/factory.bridge.near)
+2. Prover account: [prover.bridge.near](https://explorer.near.org/accounts/prover.bridge.near)
+3. ERC20 connector account: [factory.bridge.near](https://explorer.near.org/accounts/factory.bridge.near)
 
 ## Preliminary steps (tested on iOS Big Sur, Ethereum - NEAR mainnet bridge deployment)
 
