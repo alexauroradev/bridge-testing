@@ -18,6 +18,19 @@ The steps below are for the mainnet, same steps might be reproduced for testnets
 2. Prover account: [prover.bridge.near](https://explorer.near.org/accounts/prover.bridge.near)
 3. ERC20 connector account: [factory.bridge.near](https://explorer.near.org/accounts/factory.bridge.near)
 
+### Testnet
+
+#### Ropsten
+1. Client address: [0xb289c6e6c98644dc9f6a03c044564bc8558b6087](https://ropsten.etherscan.io/address/0xb289c6e6c98644dc9f6a03c044564bc8558b6087)
+2. Prover address: [0xb3df48b0ea3e91b43226fb3c5eb335b7e3d76faa](https://ropsten.etherscan.io/address/0xb3df48b0ea3e91b43226fb3c5eb335b7e3d76faa)
+3. ERC20 connector address: [0xb48e6441524f261e141bc766a7ebd54b19ca7465](https://ropsten.etherscan.io/address/0xb48e6441524f261e141bc766a7ebd54b19ca7465)
+
+#### NEAR Testnet
+1. Client account: [client.ropsten.testnet](https://explorer.testnet.near.org/accounts/client.ropsten.testnet)
+2. Prover account: [prover.ropsten.testnet](https://explorer.testnet.near.org/accounts/prover.ropsten.testnet)
+3. ERC20 connector account: [f.ropsten.testnet](https://explorer.testnet.near.org/accounts/f.ropsten.testnet)
+
+
 ## Preliminary steps (tested on iOS Big Sur, Ethereum - NEAR mainnet bridge deployment)
 
 1. Make sure you have installed npm
