@@ -36,7 +36,7 @@ The steps below are for the mainnet, same steps might be reproduced for testnets
 1. Make sure you have installed npm
 2. Install NEAR CLI: `$ npm install -g near-cli`
 3. Install TypeScript: `$ npm install -g typescript`
-4. Clone this repo: `$ git clone git@github.com:djsatok/bridge-testing.git` OR `$ git clone https://github.com/djsatok/bridge-testing.git`
+4. Clone this repo: `$ git clone git@github.com:alexauroradev/bridge-testing.git` OR `$ git clone https://github.com/alexauroradev/bridge-testing.git`
 5. `$ cd bridge-testing` & `$ npm install`.
 6. Make sure you have an access to your Ethereum account (you have a private key) and you know the address of the ERC20 token that you would like to transfer.
 9. Make sure you have an access to your NEAR account through NEAR Wallet: https://wallet.near.org/
