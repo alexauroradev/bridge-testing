@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/djsatok/bridge-testing.git"
+    "url": "git+https://github.com/alexauroradev/bridge-testing.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/djsatok/bridge-testing/issues"
+    "url": "https://github.com/alexauroradev/bridge-testing/issues"
   },
-  "homepage": "https://github.com/djsatok/bridge-testing#readme",
+  "homepage": "https://github.com/alexauroradev/bridge-testing#readme",
   "dependencies": {
     "bn": "^1.0.5",
     "eth-object": "near/eth-object#54e03b8aac8208cf724e206d49ffb8bdd30451d7",
